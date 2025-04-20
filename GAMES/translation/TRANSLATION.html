@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Translation Challenge Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .game-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #1e3a8a;
+    }
+    .question {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option-btn {
+      padding: 12px;
+      border: 2px solid #1e3a8a;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      background-color: white;
+    }
+    .option-btn:hover {
+      background-color: #e0e7ff;
+    }
+    .correct {
+      background-color: #d1fae5 !important;
+      border-color: #10b981;
+    }
+    .wrong {
+      background-color: #fee2e2 !important;
+      border-color: #ef4444;
+    }
+    .feedback {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+    #nextBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #1e40af;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      display: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="game-box">
+  <h2>Translation Challenge</h2>
+  <div class="question" id="questionText"></div>
+  <div class="options" id="optionsBox"></div>
+  <div class="feedback" id="feedbackText"></div>
+  <button id="nextBtn" onclick="loadQuestion()">Next</button>
+</div>
+
+<script>
+  const words = [
+    { english: "apple", hindi: "सेब", telugu: "ఆపిల్" },
+    { english: "water", hindi: "पानी", telugu: "నీరు" },
+    { english: "sun", hindi: "सूरज", telugu: "సూర్యుడు" },
+    { english: "mother", hindi: "माँ", telugu: "తల్లి" },
+    { english: "school", hindi: "विद्यालय", telugu: "పాఠశాల" },
+    { english: "love", hindi: "प्यार", telugu: "ప్రేమ" },
+    { english: "book", hindi: "किताब", telugu: "పుస్తకం" },
+    { english: "milk", hindi: "दूध", telugu: "పాలు" },
+    { english: "house", hindi: "घर", telugu: "ఇల్లు" },
+    { english: "fire", hindi: "आग", telugu: "అగ్ని" }
+,
+    { english: "friend", hindi: "मित्र", telugu: "స్నేహితుడు" },
+    { english: "food", hindi: "भोजन", telugu: "ఆహారం" },
+    { english: "car", hindi: "गाड़ी", telugu: "కారు" },
+    { english: "road", hindi: "सड़क", telugu: "రోడ్డు" },
+    { english: "city", hindi: "शहर", telugu: "నగరం" },
+    { english: "tree", hindi: "पेड़", telugu: "మొక్క" },
+    { english: "star", hindi: "तारा", telugu: "తార" },
+    { english: "moon", hindi: "चाँद", telugu: "చంద్రుడు" },
+    { english: "sky", hindi: "आसमान", telugu: "ఆకాశం" },
+    { english: "sea", hindi: "समुद्र", telugu: "సముద్రం" },
+    { english: "mountain", hindi: "पहाड़", telugu: "కొండ" }
+,
+    { english: "bird", hindi: "पक्षी", telugu: "పక్షి" },
+    { english: "flower", hindi: "फूल", telugu: "పువ్వు" },
+    { english: "rain", hindi: "बारिश", telugu: "వర్షం" },
+    { english: "wind", hindi: "हवा", telugu: "గాలి" },
+    { english: "light", hindi: "रोशनी", telugu: "ప్రకాశం" },
+    { english: "darkness", hindi: "अंधेरा", telugu: "చీకటి" },
+    { english: "music", hindi: "संगीत", telugu: "సంగీతం" },
+    { english: "dance", hindi: "नृत्य", telugu: "నృత్యం" },
+    { english: "game", hindi: "खेल", telugu: "ఆట" },
+    { english: "play", hindi: "खेलना", telugu: "ఆడటం" },
+    { english: "run", hindi: "दौड़ना", telugu: "పరుగులు" }
+,
+    { english: "jump", hindi: "कूदना", telugu: "కదలడం" },
+    { english: "swim", hindi: "तैरना", telugu: "తేలడం" },
+    { english: "sing", hindi: "गाना", telugu: "పాడటం" },
+    { english: "write", hindi: "लिखना", telugu: "రాయడం" },
+    { english: "read", hindi: "पढ़ना", telugu: "చదవడం" },
+    { english: "speak", hindi: "बोलना", telugu: "మాట్లాడటం" },
+    { english: "listen", hindi: "सुनना", telugu: "వినడం" },
+    { english: "see", hindi: "देखना", telugu: "చూడటం" },
+    { english: "hear", hindi: "सुनना", telugu: "వినడం" },
+    { english: "smell", hindi: "गंध लेना", telugu: "గంధం" },
+    { english: "taste", hindi: "स्वाद लेना", telugu: "రుచి" }
+,
+    { english: "touch", hindi: "छूना", telugu: "చూస్తున్నాను" },
+    { english: "feel", hindi: "महसूस करना", telugu: "అనుభూతి" },
+    { english: "think", hindi: "सोचना", telugu: "చింతించడం" },
+    { english: "know", hindi: "जानना", telugu: "తెలుసుకోవడం" },
+    { english: "understand", hindi: "समझना", telugu: "అర్థం చేసుకోవడం" },
+    { english: "believe", hindi: "विश्वास करना", telugu: "నమ్మకం" }
+,
+    { english: "remember", hindi: "याद रखना", telugu: "గుర్తుంచుకోండి" },
+    { english: "forget", hindi: "भूलना", telugu: "మర్చిపోతే" },
+    { english: "want", hindi: "चाहना", telugu: "కోరుకుంటున్నాను" },
+    { english: "need", hindi: "जरूरत", telugu: "అవసరం" },
+    { english: "like", hindi: "पसंद करना", telugu: "ఇష్టపడటం" },
+    { english: "love", hindi: "प्यार करना", telugu: "ప్రేమించు" }
+,
+    { english: "hate", hindi: "नफरत करना", telugu: "విద్వేషం" },
+    { english: "help", hindi: "मदद करना", telugu: "సహాయం" },
+    { english: "give", hindi: "देना", telugu: "నివ్వు" },
+    { english: "take", hindi: "लेना", telugu: "తీసుకోండి" },
+    { english: "bring", hindi: "लाना", telugu: "తరలించు" },
+    { english: "send", hindi: "भेजना", telugu: "కంపైన్లు" }
+,
+    { english: "show", hindi: "दिखाना", telugu: "చూపించు" },
+    { english: "tell", hindi: "बताना", telugu: "చెప్పు" },
+    { english: "ask", hindi: "पूछना", telugu: "కోరుకోండి" },
+    { english: "answer", hindi: "उत्तर देना", telugu: "సమాధానం" },
+    { english: "call", hindi: "फोन करना", telugu: "కాల్" },
+    { english: "meet", hindi: "मिलना", telugu: "కలవడం" }
+,
+    { english: "see", hindi: "देखना", telugu: "చూడండి" },
+    { english: "speak", hindi: "बोलना", telugu: "మాట్లాడండి" },
+    { english: "listen", hindi: "सुनना", telugu: "వినండి" },
+    { english: "read", hindi: "पढ़ना", telugu: "చదవండి" },
+    { english: "write", hindi: "लिखना", telugu: "రాయండి" }
+,
+    { english: "draw", hindi: "चित्र बनाना", telugu: "చిత్రం" },
+    { english: "paint", hindi: "रंगना", telugu: "రంగు" },
+    { english: "build", hindi: "बनाना", telugu: "నిర్మించు" },
+    { english: "create", hindi: "बनाना", telugu: "సృష్టించు" },
+    { english: "make", hindi: "बनाना", telugu: "చేయండి" },
+    { english: "break", hindi: "तोड़ना", telugu: "ముక్కలు" }
+,
+    { english: "fix", hindi: "ठीक करना", telugu: "సరిపరచు" },
+    { english: "repair", hindi: "मरम्मत करना", telugu: "మరమ్మత్తు" },
+    { english: "clean", hindi: "साफ करना", telugu: "శుభ్రం" },
+    { english: "wash", hindi: "धोना", telugu: "కడగడం" },
+    { english: "dry", hindi: "सूखना", telugu: "ఎండనివ్వు" }
+
+,
+    { english: "cut", hindi: "काटना", telugu: "కత్తిరించు" },
+    { english: "slice", hindi: "टुकड़ा करना", telugu: "కత్తిరించు" },
+    { english: "chop", hindi: "काटना", telugu: "కత్తిరించు" },
+    { english: "grate", hindi: "कद्दूकस करना", telugu: "తురిమి" },
+    { english: "peel", hindi: "छीलना", telugu: "చీల్చడం" }
+,
+    { english: "boil", hindi: "उबालना", telugu: "వండడం" },
+    { english: "fry", hindi: "तलना", telugu: "వేపు" },
+    { english: "bake", hindi: "बेक करना", telugu: "వేపు" },
+    { english: "roast", hindi: "भूनना", telugu: "వేపు" },
+    { english: "grill", hindi: "ग्रिल करना", telugu: "గ్రిల్" }
+,
+    { english: "steam", hindi: "भाप में पकाना", telugu: "వేపు" },
+    { english: "stir", hindi: "हिलाना", telugu: "కలపడం" },
+    { english: "mix", hindi: "मिश्रण करना", telugu: "కలపడం" },
+    { english: "pour", hindi: "उड़ेलना", telugu: "ఊరడం" },
+    { english: "serve", hindi: "सेवा करना", telugu: "సేవించు" }
+,
+    { english: "eat", hindi: "खाना", telugu: "తినడం" },
+    { english: "drink", hindi: "पीना", telugu: "తాగడం" },
+    { english: "taste", hindi: "स्वाद लेना", telugu: "రుచి" },
+    { english: "smell", hindi: "गंध लेना", telugu: "గంధం" },
+    { english: "chew", hindi: "चबाना", telugu: "చెవ్వు" }
+,
+    { english: "swallow", hindi: "गटकना", telugu: "కరిగించు" },
+    { english: "bite", hindi: "काटना", telugu: "కర్ర" },
+    { english: "lick", hindi: "चाटना", telugu: "చాటడం" },
+    { english: "suck", hindi: "चूसना", telugu: "చూస్తున్నాను" },
+    { english: "spit", hindi: "थूकना", telugu: "తుంచు" }
+
+,
+    { english: "gather", hindi: "इकट्ठा करना", telugu: "సేకరించు" },
+    { english: "collect", hindi: "संग्रह करना", telugu: "సేకరించు" },
+    { english: "pick", hindi: "चुनना", telugu: "ఎంచుకోండి" },
+    { english: "choose", hindi: "चुनना", telugu: "ఎంచుకోండి" },
+    { english: "select", hindi: "चुनना", telugu: "ఎంచుకోండి" }
+
+,
+    { english: "sort", hindi: "छांटना", telugu: "వర్గీకరించు" },
+    { english: "organize", hindi: "व्यवस्थित करना", telugu: "క్రమబద్ధీకరించు" },
+    { english: "arrange", hindi: "व्यवस्थित करना", telugu: "క్రమబద్ధీకరించు" },
+    { english: "file", hindi: "फाइल करना", telugu: "ఫైల్" },
+    { english: "store", hindi: "स्टोर करना", telugu: "స్టోర్" }
+
+,
+    { english: "save", hindi: "सहेजना", telugu: "సేవ్" },
+    { english: "keep", hindi: "रखना", telugu: "ఉంచు" },
+    { english: "hide", hindi: "छिपाना", telugu: "దాచు" },
+    { english: "find", hindi: "खोजना", telugu: "కనుగొనండి" },
+    { english: "lose", hindi: "खोना", telugu: "కలిసినప్పుడు" }
+
+,
+    { english: "search", hindi: "खोजना", telugu: "శోధించు" },
+    { english: "look", hindi: "देखना", telugu: "చూడండి" },
+    { english: "watch", hindi: "देखना", telugu: "చూడండి" },
+    { english: "observe", hindi: "निगरानी करना", telugu: "పర్యవేక్షించు" },
+    { english: "notice", hindi: "ध्यान देना", telugu: "గమనించు" }
+
+,
+    { english: "stare", hindi: "घूरना", telugu: "చూస్తున్నాను" },
+    { english: "glance", hindi: "झलक", telugu: "చూస్తున్నాను" },
+    { english: "peek", hindi: "झलक", telugu: "చూస్తున్నాను" },
+    { english: "glimpse", hindi: "झलक", telugu: "చూస్తున్నాను" },
+    { english: "gaze", hindi: "घूरना", telugu: "చూస్తున్నాను" }
+
+
+,
+    { english: "squint", hindi: "झपकना", telugu: "చూస్తున్నాను" },
+    { english: "wink", hindi: "झपकना", telugu: "చూస్తున్నాను" },
+    { english: "squint", hindi: "झपकना", telugu: "చూస్తున్నాను" },
+    { english: "frown", hindi: "भौंहें चुराना", telugu: "క్రోధం" },
+    { english: "smile", hindi: "मुस्कान", telugu: "నవ్వు" }
+
+
+,
+    { english: "laugh", hindi: "हंसना", telugu: "నవ్వు" },
+    { english: "cry", hindi: "रोना", telugu: "కన్నీరు" },
+    { english: "scream", hindi: "चिल्लाना", telugu: "కేకలు" },
+    { english: "shout", hindi: "चिल्लाना", telugu: "కేకలు" },
+    { english: "whisper", hindi: "फुसफुसाना", telugu: "చెవిలో" }
+
+
+,
+    { english: "murmur", hindi: "बड़बड़ाना", telugu: "ముర్మురం" },
+    { english: "grumble", hindi: "ख़ुद से बड़बड़ाना", telugu: "క్రోధం" },
+    { english: "complain", hindi: "शिकायत करना", telugu: "ఫిర్యాదు" },
+    { english: "argue", hindi: "बहस करना", telugu: "వాదించు" },
+    { english: "debate", hindi: "बहस करना", telugu: "చర్చించు" }
+
+
+,
+    { english: "discuss", hindi: "चर्चा करना", telugu: "చర్చించు" },
+    { english: "debate", hindi: "बहस करना", telugu: "చర్చించు" },
+    { english: "negotiate", hindi: "बातचीत करना", telugu: "సమావేశం" },
+    { english: "bargain", hindi: "बातचीत करना", telugu: "సమావేశం" },
+    { english: "persuade", hindi: "मनाना", telugu: "ఒప్పించు" }
+
+
+,
+    { english: "convince", hindi: "मनाना", telugu: "ఒప్పించు" },
+    { english: "influence", hindi: "प्रभावित करना", telugu: "ప్రభావితం" },
+    { english: "encourage", hindi: "प्रोत्साहित करना", telugu: "ప్రోత్సహించు" },
+    { english: "motivate", hindi: "प्रेरित करना", telugu: "ప్రేరేపించు" },
+    { english: "inspire", hindi: "प्रेरित करना", telugu: "ప్రేరేపించు" }
+,
+    { english: "lead", hindi: "नेतृत्व करना", telugu: "నాయకత్వం" },
+    { english: "guide", hindi: "मार्गदर्शन करना", telugu: "మార్గదర్శనం" },
+    { english: "direct", hindi: "निर्देशित करना", telugu: "నిర్దేశించు" },
+    { english: "show", hindi: "दिखाना", telugu: "చూపించు" },
+    { english: "teach", hindi: "सिखाना", telugu: "బోధించు" }
+
+,
+    { english: "train", hindi: "प्रशिक्षण देना", telugu: "శిక్షణ" },
+    { english: "educate", hindi: "शिक्षा देना", telugu: "విద్య" },
+    { english: "inform", hindi: "जानकारी देना", telugu: "సూచించు" },
+    { english: "advise", hindi: "सलाह देना", telugu: "సలహా" },
+    { english: "counsel", hindi: "सलाह देना", telugu: "సలహా" }
+
+,
+    { english: "suggest", hindi: "सुझाना", telugu: "సూచించు" },
+    { english: "recommend", hindi: "सिफारिश करना", telugu: "సిఫారసు" },
+    { english: "propose", hindi: "प्रस्तावित करना", telugu: "ప్రతిపాదించు" },
+    { english: "offer", hindi: "प्रस्तावित करना", telugu: "ప్రతిపాదించు" },
+    { english: "present", hindi: "प्रस्तुत करना", telugu: "ప్రదర్శించు" }
+
+,
+    { english: "introduce", hindi: "परिचय देना", telugu: "పరిచయం" },
+    { english: "announce", hindi: "घोषणा करना", telugu: "ప్రకటించు" },
+    { english: "declare", hindi: "घोषणा करना", telugu: "ప్రకటించు" },
+    { english: "proclaim", hindi: "घोषणा करना", telugu: "ప్రకటించు" },
+    { english: "protest", hindi: "विरोध करना", telugu: "ప్రతిఘటించు" }
+
+,
+    { english: "demonstrate", hindi: "प्रदर्शन करना", telugu: "ప్రదర్శించు" },
+    { english: "explain", hindi: "व्याख्या करना", telugu: "వివరించు" },
+    { english: "clarify", hindi: "स्पष्ट करना", telugu: "స్పష్టంగా" },
+    { english: "elucidate", hindi: "स्पष्ट करना", telugu: "స్పష్టంగా" },
+    { english: "illustrate", hindi: "चित्रित करना", telugu: "చిత్రం" }
+
+,
+    { english: "describe", hindi: "वर्णन करना", telugu: "వివరించు" },
+    { english: "depict", hindi: "चित्रित करना", telugu: "చిత్రం" },
+    { english: "represent", hindi: "प्रतिनिधित्व करना", telugu: "ప్రతినిధి" },
+    { english: "portray", hindi: "चित्रित करना", telugu: "చిత్రం" },
+    { english: "paint", hindi: "चित्रित करना", telugu: "చిత్రం" }
+
+,
+    { english: "draw", hindi: "चित्रित करना", telugu: "చిత్రం" },
+    { english: "sketch", hindi: "रेखाचित्र", telugu: "చిత్రం" },
+    { english: "draft", hindi: "मसौदा", telugu: "మసకబారిన" },
+    { english: "outline", hindi: "रूपरेखा", telugu: "రూపరేఖ" },
+    { english: "map", hindi: "नक्शा", telugu: "నకశా" }
+
+,
+    { english: "chart", hindi: "चार्ट", telugu: "చార్ట్" },
+    { english: "graph", hindi: "ग्राफ", telugu: "గ్రాఫ్" },
+    { english: "table", hindi: "तालिका", telugu: "కోశం" },
+    { english: "diagram", hindi: "आरेख", telugu: "ఆకారము" },
+    { english: "figure", hindi: "आकृति", telugu: "చిత్రం" }
+
+,
+    { english: "image", hindi: "छवि", telugu: "చిత్రం" },
+    { english: "photo", hindi: "फोटो", telugu: "ఫోటో" },
+    { english: "picture", hindi: "चित्र", telugu: "చిత్రం" },
+    { english: "snapshot", hindi: "झलक", telugu: "చిత్రం" },
+    { english: "capture", hindi: "कैद करना", telugu: "కెమెరా" }
+
+,
+    { english: "snapshot", hindi: "झलक", telugu: "చిత్రం" },
+    { english: "capture", hindi: "कैद करना", telugu: "కెమెరా" },
+    { english: "record", hindi: "रिकॉर्ड करना", telugu: "రికార్డు" },
+    { english: "document", hindi: "दस्तावेज़", telugu: "పత్రం" },
+    { english: "archive", hindi: "संग्रहित करना", telugu: "ఆర్కైవ్" }
+
+,
+    { english: "store", hindi: "स्टोर करना", telugu: "స్టోర్" },
+    { english: "save", hindi: "सहेजना", telugu: "సేవ్" },
+    { english: "backup", hindi: "बैकअप", telugu: "బ్యాకప్" },
+    { english: "restore", hindi: "पुनर्स्थापित करना", telugu: "పునరుద్ధరించు" },
+    { english: "retrieve", hindi: "प्राप्त करना", telugu: "తీసుకోండి" }
+    
+,
+    { english: "recover", hindi: "पुनर्प्राप्त करना", telugu: "పునరుద్ధరించు" },
+    { english: "retrieve", hindi: "प्राप्त करना", telugu: "తీసుకోండి" },
+    { english: "extract", hindi: "निकालना", telugu: "నికరించు" },
+    { english: "unzip", hindi: "अनज़िप करना", telugu: "అన్‌జిప్" },
+    { english: "compress", hindi: "संकुचित करना", telugu: "సంకోచించు" }
+
+,
+    { english: "zip", hindi: "ज़िप करना", telugu: "జిప్" },
+    { english: "encrypt", hindi: "एन्क्रिप्ट करना", telugu: "ఎన్‌క్రిప్ట్" },
+    { english: "decrypt", hindi: "डिक्रिप्ट करना", telugu: "డీక్రిప్ట్" },
+    { english: "secure", hindi: "सुरक्षित करना", telugu: "సురక్షితంగా" },
+    { english: "protect", hindi: "सुरक्षित करना", telugu: "రక్షించు" }
+
+
+,
+    { english: "shield", hindi: "ढालना", telugu: "రక్షించు" },
+    { english: "guard", hindi: "रक्षा करना", telugu: "రక్షించు" },
+    { english: "defend", hindi: "रक्षा करना", telugu: "రక్షించు" },
+    { english: "safeguard", hindi: "सुरक्षित करना", telugu: "సురక్షితంగా" },
+    { english: "fortify", hindi: "मजबूत करना", telugu: "బలపరచు" }
+
+,
+    { english: "strengthen", hindi: "मजबूत करना", telugu: "బలపరచు" },
+    { english: "reinforce", hindi: "मजबूत करना", telugu: "బలపరచు" },
+    { english: "bolster", hindi: "सहारा देना", telugu: "బలపరచు" },
+    { english: "support", hindi: "समर्थन करना", telugu: "మద్దతు" },
+    { english: "assist", hindi: "सहायता करना", telugu: "సహాయపడు" }
+,
+    { english: "aid", hindi: "सहायता करना", telugu: "సహాయపడు" },
+    { english: "help", hindi: "मदद करना", telugu: "సహాయపడు" },
+    { english: "facilitate", hindi: "सुविधा देना", telugu: "సౌకర్యం" },
+    { english: "enable", hindi: "सक्षम करना", telugu: "సాధ్యం" },
+    { english: "empower", hindi: "शक्तिशाली बनाना", telugu: "శక్తివంతం" }
+
+
+    
+  ];
+    
+
+  let currentWord, currentFrom, currentTo, correctAnswer;
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function getRandomLangs() {
+    const langs = ["english", "hindi", "telugu"];
+    let from = langs[Math.floor(Math.random() * langs.length)];
+    let to;
+    do {
+      to = langs[Math.floor(Math.random() * langs.length)];
+    } while (to === from);
+    return [from, to];
+  }
+
+  function loadQuestion() {
+    document.getElementById("feedbackText").textContent = "";
+    document.getElementById("nextBtn").style.display = "none";
+
+    const word = words[Math.floor(Math.random() * words.length)];
+    const [fromLang, toLang] = getRandomLangs();
+
+    currentWord = word;
+    currentFrom = fromLang;
+    currentTo = toLang;
+    correctAnswer = word[toLang];
+
+    const question = `Translate from ${fromLang.toUpperCase()} to ${toLang.toUpperCase()}: "${word[fromLang]}"`;
+    document.getElementById("questionText").textContent = question;
+
+    // Generate options
+    let options = [correctAnswer];
+    while (options.length < 4) {
+      let randomWord = words[Math.floor(Math.random() * words.length)][toLang];
+      if (!options.includes(randomWord)) {
+        options.push(randomWord);
+      }
+    }
+
+    shuffle(options);
+
+    const optionsBox = document.getElementById("optionsBox");
+    optionsBox.innerHTML = "";
+
+    options.forEach(option => {
+      const btn = document.createElement("button");
+      btn.textContent = option;
+      btn.className = "option-btn";
+      btn.onclick = () => handleAnswer(btn, option);
+      optionsBox.appendChild(btn);
+    });
+  }
+
+  function handleAnswer(button, chosen) {
+    const buttons = document.querySelectorAll(".option-btn");
+    buttons.forEach(btn => btn.disabled = true);
+
+    if (chosen === correctAnswer) {
+      button.classList.add("correct");
+      document.getElementById("feedbackText").textContent = "✅ Correct!";
+    } else {
+      button.classList.add("wrong");
+      document.getElementById("feedbackText").textContent = `❌ Wrong! Correct: ${correctAnswer}`;
+    }
+
+    document.getElementById("nextBtn").style.display = "inline-block";
+  }
+
+  loadQuestion();
+</script>
+
+</body>
+</html>

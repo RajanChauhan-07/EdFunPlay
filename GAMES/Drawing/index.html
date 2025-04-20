@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawing Game</title>
+    <style>
+        body { 
+            text-align: center; 
+            font-family: Arial, sans-serif; 
+            background-color: #e0f7fa; /* Changed outer background color */
+        }
+        canvas { 
+            border: 1px solid black; 
+            cursor: crosshair; 
+            background: #f4f3f2; 
+        }
+        .toolbar { margin: 10px; }
+        button, input { margin: 5px; padding: 8px; }
+        #challengeBox { 
+            margin: 20px; 
+            padding: 10px; 
+            font-size: 18px; 
+            border: 1px solid #333; 
+            display: inline-block; 
+            background: #eeea71; 
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Drawing Game</h1>
+    
+    <div class="toolbar">
+        <input type="color" id="colorPicker">
+        <input type="range" id="brushSize" min="1" max="10" value="3">
+        <button onclick="undo()">Undo</button>
+        <button onclick="redo()">Redo</button>
+        <button onclick="clearCanvas()">Clear</button>
+        <button onclick="saveImage()">Save</button>
+        
+        <div>
+            <button onclick="activateDraw()">Draw</button>
+            <button onclick="activateErase()">Erase</button>
+            <button onclick="activateFill()">Fill</button>
+            <button onclick="activateShape('circle')">Circle</button>
+            <button onclick="activateShape('rect')">Rectangle</button>
+            <button onclick="activateShape('ellipse')">Ellipse</button>
+            <button onclick="activateShape('triangle')">Triangle</button>
+            <button onclick="activateShape('line')">Line</button>
+            <button onclick="activateShape('polygon')">Polygon</button>
+            <button onclick="activateShape('star')">Star</button>
+        </div>
+    </div>
+
+    <canvas id="drawingCanvas" width="800" height="500"></canvas>
+
+    <h2>Challenge Mode</h2>
+    <div id="challengeBox">Press "New Challenge" to start!</div>
+    <button onclick="newChallenge()">New Challenge</button>
+
+    <script>
+        const canvas = document.getElementById("drawingCanvas");
+        const ctx = canvas.getContext("2d");
+        let drawing = false;
+        let brushColor = "#000000";
+        let brushSize = 3;
+        let history = [], redoStack = [];
+        let isErasing = false;
+        let isFilling = false;
+        let currentShape = null;
+        let startX, startY;
+        let challenges = [
+            "Draw a cat 🐱", "Draw a tree 🌳", "Draw a rocket 🚀", 
+            "Draw a smiling sun ☀️", "Draw a robot 🤖", "Draw a fish 🐟", 
+            "Draw a mountain ⛰️", "Draw a butterfly 🦋", "Draw a car 🚗"
+        ];
+
+        canvas.addEventListener("mousedown", (e) => { 
+            if (isFilling) return;  // Don't start drawing if fill is active
+            drawing = true; 
+            saveState(); 
+            startX = e.offsetX;
+            startY = e.offsetY;
+        });
+        
+        canvas.addEventListener("mouseup", () => { drawing = false; ctx.beginPath(); });
+        canvas.addEventListener("mousemove", draw);
+        canvas.addEventListener("click", fill);
+
+        function draw(event) {
+            if (!drawing || isFilling || isErasing) return;
+            ctx.lineWidth = brushSize;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = brushColor;
+            ctx.lineTo(event.offsetX, event.offsetY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(event.offsetX, event.offsetY);
+        }
+
+        document.getElementById("colorPicker").addEventListener("input", (e) => {
+            brushColor = e.target.value;
+        });
+
+        document.getElementById("brushSize").addEventListener("input", (e) => {
+            brushSize = e.target.value;
+        });
+
+        function saveState() {
+            history.push(canvas.toDataURL());
+            redoStack = [];
+        }
+
+        function undo() {
+            if (history.length > 0) {
+                redoStack.push(history.pop());
+                let img = new Image();
+                img.src = history.length > 0 ? history[history.length - 1] : "";
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        }
+
+        function redo() {
+            if (redoStack.length > 0) {
+                let img = new Image();
+                img.src = redoStack.pop();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    history.push(img.src);
+                };
+            }
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            history = [];
+            redoStack = [];
+        }
+
+        function saveImage() {
+            let link = document.createElement("a");
+            link.download = "drawing.png";
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function newChallenge() {
+            let challenge = challenges[Math.floor(Math.random() * challenges.length)];
+            document.getElementById("challengeBox").innerText = challenge;
+        }
+
+        function activateDraw() {
+            isErasing = false;
+            isFilling = false;
+        }
+
+        function activateErase() {
+            isErasing = true;
+            isFilling = false;
+        }
+
+        function activateFill() {
+            isErasing = false;
+            isFilling = true;
+        }
+
+        function fill(event) {
+            if (!isFilling) return;
+            let x = event.offsetX;
+            let y = event.offsetY;
+            let imageData = ctx.getImageData(x, y, 1, 1);
+            let pixel = imageData.data;
+            let fillColor = ctx.fillStyle || brushColor;
+            ctx.fillStyle = fillColor;
+
+            function fillArea(x, y, targetColor) {
+                let currentColor = ctx.getImageData(x, y, 1, 1).data;
+                if (colorsMatch(currentColor, targetColor)) {
+                    ctx.fillRect(x, y, 1, 1);
+                    fillArea(x + 1, y, targetColor);
+                    fillArea(x - 1, y, targetColor);
+                    fillArea(x, y + 1, targetColor);
+                    fillArea(x, y - 1, targetColor);
+                }
+            }
+
+            function colorsMatch(c1, c2) {
+                return c1[0] === c2[0] && c1[1] === c2[1] && c1[2] === c2[2] && c1[3] === c2[3];
+            }
+
+            fillArea(x, y, pixel);
+        }
+
+        function activateShape(shape) {
+            isErasing = false;
+            isFilling = false;
+            currentShape = shape;
+            canvas.addEventListener("mousemove", drawShape);
+        }
+
+        function drawShape(event) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (currentShape === "circle") {
+                let radius = Math.sqrt(Math.pow(event.offsetX - startX, 2) + Math.pow(event.offsetY - startY, 2));
+                ctx.beginPath();
+                ctx.arc(startX, startY, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = brushColor;
+                ctx.lineWidth = brushSize;
+                ctx.stroke();
+            } else if (currentShape === "rect") {
+                ctx.beginPath();
+                ctx.rect(startX, startY, event.offsetX - startX, event.offsetY - startY);
+                ctx.strokeStyle = brushColor;
+                ctx.lineWidth = brushSize;
+                ctx.stroke();
+            } else if (currentShape === "ellipse") {
+                let radiusX = Math.abs(event.offsetX - startX);
+                let radiusY = Math.abs(event.offsetY - startY);
+                ctx.beginPath();
+                ctx.ellipse(startX, startY, radiusX, radiusY, 0, 0, Math.PI * 2);
+                ctx.strokeStyle = brushColor;
+                ctx.lineWidth = brushSize;
+                ctx.stroke();
+            } else if (currentShape === "triangle") {
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(event.offsetX, startY);
+                ctx.lineTo(startX + (event.offsetX - startX) / 2, event.offsetY);
+                ctx.closePath();
+                ctx.strokeStyle = brushColor;
+                ctx.lineWidth = brushSize;
+                ctx.stroke();
+            } else if (currentShape === "line") {
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(event.offsetX, event.offsetY);
+                ctx.strokeStyle = brushColor;
+                ctx.lineWidth = brushSize;
+                ctx.stroke();
+            } else if (currentShape === "polygon") {
+                // Drawing polygon (e.g., triangle)
+                const sides = 6;
+                let angle = (2 * Math.PI) / sides;
+                ctx.beginPath();
+                for (let i = 0; i < sides; i++) {
+                    let x = startX + Math.cos(i * angle) * (event.offsetX - startX);
+                    let y = startY + Math.sin(i * angle) * (event.offsetY - startY);
+                    ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.strokeStyle = brushColor;
+                ctx.lineWidth = brushSize;
+                ctx.stroke();
+            } else if (currentShape === "star") {
+                const spikes = 5;
+                const outerRadius = Math.abs(event.offsetX - startX);
+                const innerRadius = outerRadius / 2;
+                let rotation = (Math.PI / 2) * 3;
+                let step = Math.PI / spikes;
+
+                ctx.beginPath();
+                for (let i = 0; i < spikes; i++) {
+                    let x = startX + Math.cos(rotation) * outerRadius;
+                    let y = startY + Math.sin(rotation) * outerRadius;
+                    ctx.lineTo(x, y);
+                    rotation += step;
+
+                    x = startX + Math.cos(rotation) * innerRadius;
+                    y = startY + Math.sin(rotation) * innerRadius;
+                    ctx.lineTo(x, y);
+                    rotation += step;
+                }
+                ctx.closePath();
+                ctx.strokeStyle = brushColor;
+                ctx.lineWidth = brushSize;
+                ctx.stroke();
+            }
+        }
+    </script>
+
+</body>
+</html>

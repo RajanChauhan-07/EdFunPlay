@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EdFun play - Home</title>
+  <link rel="stylesheet" href="homepage.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script defer src="homepage.js"></script>
+</head>
+<body>
+  <!-- Enhanced Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <!-- Logo in a Box -->
+      <div class="logo-box">
+        <span class="logo-text">EDFun Play</span>
+      </div>
+      
+      <!-- Navigation Section -->
+      <nav class="header-nav">
+        <ul class="nav-links">
+          <li><a href="#featured" class="header-link"><i class="fas fa-trophy"></i> Leaderboard</a></li>
+          <li><a href="#categories-section" class="header-link"><i class="fas fa-gamepad"></i> Game Categories</a></li>
+        </ul>
+        <div class="nav-buttons">
+          <a href="login.html" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login / Signup</a>
+          <a href="#" class="account-btn"><i class="fas fa-user"></i> Account</a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Hero Section inside Header -->
+    <div class="header-hero">
+      <h1>Welcome to <span class="neon-text">EdFun Play</span></h1>
+      <p>Your one-stop destination for fun, educational, and interactive games!</p>
+      <div class="search-container">
+        <input type="text" placeholder="Search games..." class="search-input">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Featured Game Slider Section -->
+  <section class="featured-game" id="featured">
+    <div class="slider">
+      <div class="slide active">
+        <div class="game-banner">
+          <h2>GUN STRIKE</h2>
+          <p>Gun Strike is an action-packed gun fighting game where players battle enemies in intense shootouts.</p>
+          <div class="game-stats">
+            <span><i class="fas fa-star"></i> 4.8</span>
+            <span><i class="fas fa-users"></i> 10K+ Players</span>
+          </div>
+          <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="game-banner">
+          <h2>WORD PUZZLE</h2>
+          <p>Word Puzzle is a fun and brain-boosting game where players solve letter challenges to uncover hidden words.</p>
+          <div class="game-stats">
+            <span><i class="fas fa-star"></i> 4.6</span>
+            <span><i class="fas fa-users"></i> 8K+ Players</span>
+          </div>
+          <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="game-banner">
+          <h2>BLOCK MULTIPLES </h2>
+          <p>STUDY MATHS IN A FUN WAY!</p>
+          <div class="game-stats">
+            <span><i class="fas fa-star"></i> 4.7</span>
+            <span><i class="fas fa-users"></i> 12K+ Players</span>
+          </div>
+          <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="slider-nav">
+      <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+      <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories-section" id="categories-section">
+    <h2>Game Categories</h2>
+    <div class="categories-container">
+      <div class="category-card">
+        <i class="fas fa-shield-alt"></i>
+        <h3>Action</h3>
+        <p>50+ Games</p>
+      </div>
+      <div class="category-card">
+        <i class="fas fa-puzzle-piece"></i>
+        <h3>Puzzle</h3>
+        <p>30+ Games</p>
+      </div>
+      <div class="category-card">
+        <i class="fas fa-brain"></i>
+        <h3>Educational</h3>
+        <p>40+ Games</p>
+      </div>
+      <div class="category-card">
+        <i class="fas fa-running"></i>
+        <h3>Adventure</h3>
+        <p>35+ Games</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Games Grid Section -->
+<section class="games-grid">
+  <h2>Popular Games</h2>
+  <div class="games-container">
+    <!-- Game Box 1 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="gunsboom.jpg" alt="Striker Gun 3D">
+      </div>
+      <h3>Striker Gun 3D</h3>
+      <p>An ultimate 3D shooting game!</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.5</span>
+        <span><i class="fas fa-users"></i> 5K+</span>
+      </div>
+      <a href="../GAMES/Shooting Game/index.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+
+    <!-- Game Box 2 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="cardrive.jpg" alt="CAR RACING 3D">
+      </div>
+      <h3>CAR RACING 3D</h3>
+      <p>Adventures racing game!</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.3</span>
+        <span><i class="fas fa-users"></i> 3K+</span>
+      </div>
+      <a href="../GAMES/Racing/index.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+
+    <!-- Game Box 3 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="history.jpg" alt="History Quiz">
+      </div>
+      <h3>History Quiz</h3>
+      <p>Learn History through fun quizzes!</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.4</span>
+        <span><i class="fas fa-users"></i> 4K+</span>
+      </div>
+      <a href="../GAMES/history/index.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+
+    <!-- Game Box 4 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="wordpuzz.jpg" alt="WORD PUZZLE">
+      </div>
+      <h3>WORD PUZZLE</h3>
+      <p>Test your vocabulary and word finding skills!</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.3</span>
+        <span><i class="fas fa-users"></i> 3K+</span>
+      </div>
+      <a href="../GAMES/wordpuzzle/wordpuzzle.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+
+    <!-- Game Box 5 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="translate.jpg" alt="Translation">
+      </div>
+      <h3>Translation</h3>
+      <p>Word conversion challenges!</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.3</span>
+        <span><i class="fas fa-users"></i> 3K+</span>
+      </div>
+      <a href="../GAMES/translation/TRANSLATION.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+
+    <!-- Game Box 6 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="animal.jpg" alt="Animal">
+      </div>
+      <h3>Animal</h3>
+      <p>Fun,Educational,interactive</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.3</span>
+        <span><i class="fas fa-users"></i> 3K+</span>
+      </div>
+      <a href="../GAMES/Animal/index.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+
+    <!-- Game Box 7 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="paintss.jpg" alt="Paint it">
+      </div>
+      <h3>Paint it</h3>
+      <p>Paint and colours for kids</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.3</span>
+        <span><i class="fas fa-users"></i> 3K+</span>
+      </div>
+      <a href="../GAMES/Drawing/index.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+
+    <!-- Game Box 8 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="Cookmama.jpg" alt="Cook with me">
+      </div>
+      <h3>Cook with me</h3>
+      <p>Cook with mammas</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.3</span>
+        <span><i class="fas fa-users"></i> 3K+</span>
+      </div>
+      <a href="../GAMES/cook/index.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+
+    <!-- Game Box 9 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="picture-word.jpg" alt="Picture-Word">
+      </div>
+      <h3>Picture-Word</h3>
+      <p>Recognise it & Name it</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.3</span>
+        <span><i class="fas fa-users"></i> 3K+</span>
+      </div>
+      <a href="../GAMES/Picture To Word/Picture To Word/index.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+
+    <!-- Game Box 10 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="block.jpg" alt="BLOCK MULTIPLES">
+      </div>
+      <h3>BLOCK MULTIPLES</h3>
+      <p>Learn multiplications</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.3</span>
+        <span><i class="fas fa-users"></i> 3K+</span>
+      </div>
+      <a href="../GAMES/2048-master/2048-master/index.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+
+    <!-- Game Box 11 -->
+    <div class="game-box">
+      <div class="game-image">
+        <img src="quiz.jpg" alt="quizzes">
+      </div>
+      <h3>quizzes</h3>
+      <p>Test your General knowledge</p>
+      <div class="game-meta">
+        <span><i class="fas fa-star"></i> 4.3</span>
+        <span><i class="fas fa-users"></i> 3K+</span>
+      </div>
+      <a href="../GAMES/quiz/quiz/index.html">
+        <button class="play-btn">Play Now <i class="fas fa-play"></i></button>
+      </a>
+    </div>
+  </div>
+</section>
+
+  <!-- Newsletter Section -->
+  <section class="newsletter-section">
+    <div class="newsletter-container">
+      <h2>Stay Updated</h2>
+      <p>Subscribe to our newsletter for new games and updates!</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Enhanced Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About Us</h3>
+        <p>EdFun Play is your premier destination for educational gaming entertainment.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#featured">Featured</a></li>
+          <li><a href="#categories-section">Categories</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Connect With Us</h3>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 EDFun Play. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

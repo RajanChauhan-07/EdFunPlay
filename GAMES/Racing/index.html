@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Car Racing Game</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #222;
+      font-family: Arial, sans-serif;
+    }
+
+    canvas {
+      display: block;
+      background: #444;
+      margin: 0 auto;
+    }
+
+    #ui {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 20px;
+      z-index: 10;
+    }
+
+    #restartBtn {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #ff4444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div id="ui">
+    Lives: <span id="lives">3</span><br>
+    <button id="restartBtn">Restart</button>
+  </div>
+
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const livesDisplay = document.getElementById('lives');
+    const restartBtn = document.getElementById('restartBtn');
+
+    const carImg = new Image();
+    const obsImg = new Image();
+    carImg.src = 'car.png';       // your car image
+    obsImg.src = 'car 2.png';     // obstacle image
+
+    let lives = 3;
+    let isGameOver = false;
+
+    const car = {
+      x: 170,           // Adjusted to center better
+      y: 460,           // Lowered due to taller car
+      width: 60,        // Increased width
+      height: 120,      // Increased height
+      speed: 5
+    };
+
+    const lines = [];
+    for (let i = 0; i < 10; i++) {
+      lines.push({ x: 195, y: i * 100, width: 10, height: 60 });
+    }
+
+    const obstacles = [];
+    for (let i = 0; i < 5; i++) {
+        obstacles.push({
+        x: Math.random() * (canvas.width - 80),  // Updated to match new obstacle width
+         y: -Math.random() * 600 - i * 220,       // Adjusted vertical spacing for larger obstacles
+         width: 80,                              // New width for obstacles
+        height: 160                             // New height for obstacles
+      });
+    }
+
+
+    let keys = {};
+    window.addEventListener('keydown', e => keys[e.key] = true);
+    window.addEventListener('keyup', e => keys[e.key] = false);
+
+    restartBtn.addEventListener('click', () => {
+      lives = 3;
+      isGameOver = false;
+      livesDisplay.textContent = lives;
+      restartBtn.style.display = 'none';
+      resetObstacles();
+      gameLoop();
+    });
+
+    function resetObstacles() {
+      for (let i = 0; i < obstacles.length; i++) {
+        obstacles[i].y = -Math.random() * 600 - i * 180;
+        obstacles[i].x = Math.random() * (canvas.width - obstacles[i].width);
+      }
+    }
+
+    function update() {
+      if (isGameOver) return;
+
+      if (keys['ArrowLeft'] && car.x > 0) car.x -= car.speed;
+      if (keys['ArrowRight'] && car.x + car.width < canvas.width) car.x += car.speed;
+
+      for (let line of lines) {
+        line.y += 5;
+        if (line.y > canvas.height) line.y = -60;
+      }
+
+      for (let obs of obstacles) {
+        obs.y += 4;
+        if (obs.y > canvas.height) {
+          obs.y = -Math.random() * 600 - 100;
+          obs.x = Math.random() * (canvas.width - obs.width);
+        }
+
+        // Collision detection
+        if (
+          car.x < obs.x + obs.width &&
+          car.x + car.width > obs.x &&
+          car.y < obs.y + obs.height &&
+          car.y + car.height > obs.y
+        ) {
+          lives--;
+          livesDisplay.textContent = lives;
+          if (lives <= 0) {
+            isGameOver = true;
+            restartBtn.style.display = 'inline-block';
+          }
+          resetObstacles();
+          break;
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = 'white';
+      for (let line of lines) {
+        ctx.fillRect(line.x, line.y, line.width, line.height);
+      }
+
+      ctx.drawImage(carImg, car.x, car.y, car.width, car.height);
+
+      for (let obs of obstacles) {
+        ctx.drawImage(obsImg, obs.x, obs.y, obs.width, obs.height);
+      }
+
+      if (isGameOver) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'white';
+        ctx.font = '36px Arial';
+        ctx.fillText('Game Over', 110, 300);
+      }
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      if (!isGameOver) requestAnimationFrame(gameLoop);
+    }
+
+    carImg.onload = () => {
+      obsImg.onload = () => {
+        gameLoop();
+      };
+    };
+  </script>
+</body>
+</html>

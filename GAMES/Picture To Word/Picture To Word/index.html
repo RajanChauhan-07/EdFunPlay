@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picture to Word Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        #gameContainer {
+            border: 2px solid #ccc;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin: 20px 0;
+            width: 80%;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .feedback {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="gameContainer">
+        <h2>Guess the Word!</h2>
+        <img id="image" src="images/apple.png" alt="Guess the Word Image">
+        <div>
+            <input type="text" id="wordInput" placeholder="Type your answer here">
+        </div>
+        <button onclick="checkAnswer()">Submit</button>
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <script>
+        // Array of images and words to guess
+        const gameData = [
+            { image: "images/apple.png", word: "apple" },
+            { image: "images/banana.png", word: "banana" },
+            { image: "images/cat.png", word: "cat" },
+            { image: "images/dog.png", word: "dog" },
+            { image: "images/car.png", word: "car" },
+            { image: "images/orange.png", word: "orange" },
+            { image: "images/grape.jpg", word: "grape" },
+            { image: "images/elephant.jpg", word: "elephant" },
+            { image: "images/tree.jpg", word: "tree" },
+            { image: "images/sun.jpg", word: "sun" },
+            { image: "images/carrot.jpg", word: "carrot" },
+            { image: "images/ball.jpg", word: "ball" }
+        ];
+
+        let currentIndex = 0;
+
+        // Set initial image and word
+        updateGame(currentIndex);
+
+        function updateGame(index) {
+            document.getElementById("image").src = gameData[index].image;
+            document.getElementById("wordInput").value = ''; // Clear input field
+            document.getElementById("feedback").textContent = ''; // Clear feedback
+        }
+
+        // Function to check the player's guess
+        function checkAnswer() {
+            const playerGuess = document.getElementById("wordInput").value.toLowerCase();
+            const feedbackElement = document.getElementById("feedback");
+
+            if (playerGuess === gameData[currentIndex].word) {
+                feedbackElement.textContent = "Correct! Well done!";
+                feedbackElement.style.color = "green";
+
+                // Move to next image/word
+                currentIndex = (currentIndex + 1) % gameData.length; // Loop back to the first one after the last
+                setTimeout(() => updateGame(currentIndex), 1000); // Update after 1 second delay
+            } else {
+                feedbackElement.textContent = "Oops! Try again.";
+                feedbackElement.style.color = "red";
+            }
+        }
+    </script>
+
+</body>
+</html>

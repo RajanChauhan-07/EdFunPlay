@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EDFun Play - Login</title>
+  <!-- Link to your login-specific CSS -->
+  <link rel="stylesheet" href="login.css" />
+  <!-- Google Fonts (optional) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ========== HEADER (Same as main site) ========== -->
+  <header class="main-header">
+    <div class="header-container">
+      <!-- Logo in a Box -->
+      <div class="logo-box">
+        <span class="logo-text">EDFun Play</span>
+      </div>
+
+      <!-- Navigation Section -->
+      <nav class="header-nav">
+        <ul class="nav-links">
+          <li><a href="#" class="header-link">Top Games</a></li>
+          <li><a href="#" class="header-link">Leaderboard</a></li>
+          <li><a href="#" class="header-link">Game Categories</a></li>
+        </ul>
+        <div class="nav-buttons">
+          <button class="account-btn">Account</button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Hero Section inside Header (Optional) -->
+    <div class="header-hero">
+      <h1><span class="neon-text"></span></h1>
+    </div>
+  </header>
+  <!-- ========== END HEADER ========== -->
+
+  <!-- ========== LOGIN SECTION ========== -->
+  <section class="login-section">
+    <div class="login-wrapper">
+      <div class="login-box">
+        <h2>Welcome Back to <span class="neon-text">EDFun Play</span></h2>
+        <p>Please log in to continue</p>
+
+        <!-- Login Form -->
+        <form class="login-form" id="loginForm">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your email" required />
+
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
+
+          <!-- Dynamic CAPTCHA -->
+          <label for="captcha-input">Please enter the code below:</label>
+          <div class="captcha-container">
+            <span id="captcha-code"></span>
+            <button type="button" id="refresh-captcha" title="Refresh CAPTCHA">↻</button>
+          </div>
+          <input type="text" id="captcha-input" placeholder="Enter the code above" required />
+
+          <button type="submit" class="login-btn login-submit">Login</button>
+        </form>
+
+        <!-- Additional Links -->
+        <div class="login-links">
+          <a href="#">Forgot Password?</a>
+          <a href="#">Create Account</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ========== END LOGIN SECTION ========== -->
+
+  <!-- ========== FOOTER (Same as main site) ========== -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 EDFun Play. All rights reserved.</p>
+    </div>
+  </footer>
+  <!-- ========== END FOOTER ========== -->
+
+  <!-- JavaScript for the login page -->
+  <script src="login.js"></script>
+  <!-- Added script for redirection -->
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      // Get the CAPTCHA input and generated code
+      const captchaInput = document.getElementById('captcha-input').value.trim();
+      const captchaCode = document.getElementById('captcha-code').textContent;
+      
+      // Check if CAPTCHA is correct (case insensitive)
+      if (captchaInput.toLowerCase() === captchaCode.toLowerCase()) {
+        // Redirect to homepage after successful login
+        window.location.href = "homepage.html";
+      }
+      // If CAPTCHA is wrong, the existing login.js will handle the error
+    });
+  </script>
+</body>
+</html>
