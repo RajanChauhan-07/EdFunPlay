@@ -1,31 +1,35 @@
 const CACHE_NAME = 'edfun-play-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/HOME/homepage.css',
-  '/HOME/homepage.js',
-  '/HOME/login.html',
-  '/HOME/login.css',
-  '/HOME/login.js',
-  '/HOME/gunsboom.jpg',
-  '/HOME/cardrive.jpg',
-  '/HOME/history.jpg',
-  '/HOME/wordpuzz.jpg',
-  '/HOME/translate.jpg',
-  '/HOME/animal.jpg',
-  '/HOME/paintss.jpg',
-  '/HOME/Cookmama.jpg',
-  '/HOME/picture-word.jpg',
-  '/HOME/block.jpg',
-  '/HOME/bg3.jpg',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap'
+  '/EdFunPlay/',
+  '/EdFunPlay/index.html',
+  '/EdFunPlay/manifest.json',
+  '/EdFunPlay/HOME/homepage.css',
+  '/EdFunPlay/HOME/homepage.js',
+  '/EdFunPlay/HOME/pin.css',
+  '/EdFunPlay/HOME/pin.js',
+  '/EdFunPlay/HOME/login.html',
+  '/EdFunPlay/HOME/login.css',
+  '/EdFunPlay/HOME/login.js',
+  '/EdFunPlay/HOME/gunsboom.jpg',
+  '/EdFunPlay/HOME/cardrive.jpg',
+  '/EdFunPlay/HOME/history.jpg',
+  '/EdFunPlay/HOME/wordpuzz.jpg',
+  '/EdFunPlay/HOME/translate.jpg',
+  '/EdFunPlay/HOME/animal.jpg',
+  '/EdFunPlay/HOME/paintss.jpg',
+  '/EdFunPlay/HOME/Cookmama.jpg',
+  '/EdFunPlay/HOME/picture-word.jpg',
+  '/EdFunPlay/HOME/block.jpg',
+  '/EdFunPlay/HOME/bg3.jpg'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+      .then(cache => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
   );
 });
 
@@ -36,9 +40,9 @@ self.addEventListener('fetch', event => {
         if (response) {
           return response;
         }
-        return fetch(event.request)
-          .then(response => {
-            if (!response || response.status !== 200 || response.type !== 'basic') {
+        return fetch(event.request).then(
+          response => {
+            if(!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
             const responseToCache = response.clone();
@@ -47,7 +51,8 @@ self.addEventListener('fetch', event => {
                 cache.put(event.request, responseToCache);
               });
             return response;
-          });
+          }
+        );
       })
   );
 }); 
