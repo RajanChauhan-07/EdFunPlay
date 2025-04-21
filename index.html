@@ -4,10 +4,60 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EdFun play - Home</title>
+  <!-- Load PIN lock styles first -->
+  <link rel="stylesheet" href="HOME/pin.css" />
   <link rel="stylesheet" href="HOME/homepage.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4a90e2">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="description" content="EdFun Play - Educational Gaming Platform for Kids">
+  
+  <!-- Load PIN lock script first -->
+  <script defer src="HOME/pin.js"></script>
   <script defer src="HOME/homepage.js"></script>
+  
+  <!-- Prevent navigation and context menu -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Prevent navigation keys
+      window.addEventListener('keydown', function(e) {
+        if(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Alt', 'F4'].includes(e.key)) {
+          e.preventDefault();
+        }
+      });
+
+      // Prevent right-click
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+
+      // Force initialize PIN lock
+      if (typeof lockScreen === 'function') {
+        lockScreen();
+      } else {
+        console.error('PIN lock system not loaded properly');
+      }
+    });
+  </script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful');
+          })
+          .catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+    }
+  </script>
 </head>
 <body>
   <!-- Enhanced Header -->
